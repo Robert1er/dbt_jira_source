@@ -1,0 +1,36 @@
+name: 'jira_source'
+version: '0.4.0'
+config-version: 2
+require-dbt-version: [">=1.0.0", "<2.0.0"]
+
+
+vars:
+  jira_source:
+    issue: "{{ source('jira', 'issue') }}"
+    project: "{{ source('jira', 'project') }}"
+    user: "{{ source('jira', 'user') }}"
+    issue_type: "{{ source('jira', 'issue_type') }}"
+    status: "{{ source('jira', 'status') }}"
+    status_category: "{{ source('jira', 'status_category') }}"
+    resolution: "{{ source('jira', 'resolution') }}"
+    priority: "{{ source('jira', 'priority') }}"
+    issue_multiselect_history: "{{ source('jira', 'issue_multiselect_history') }}"
+    issue_field_history: "{{ source('jira', 'issue_field_history') }}"
+    comment: "{{ source('jira', 'comment') }}"
+    issue_link: "{{ source('jira', 'issue_link') }}"
+    component: "{{ source('jira', 'component') }}"
+    field: "{{ source('jira', 'field') }}"
+    field_option: "{{ source('jira', 'field_option') }}"
+    sprint: "{{ source('jira', 'sprint') }}"
+    version: "{{ source('jira', 'version') }}"
+    jira_using_sprints: true # disable if you are not using sprints in Jira
+    jira_using_components: true # disable if you are not using components in Jira
+    jira_using_versions: true # disable if you are not using versions in Jira
+
+
+models:
+  jira_source:
+    tmp:
+      +materialized: view
+    +materialized: table
+    +schema: stg_jira

@@ -1,0 +1,81 @@
+name: 'jira_source_integration_tests'
+version: '0.3.2'
+config-version: 2
+profile: 'integration_tests'
+
+
+vars:
+  jira_source:
+    comment: "{{ ref('comment') }}"
+    component: "{{ ref('component') }}"
+    epic: "{{ ref('epic') }}"
+    field: "{{ ref('field') }}"
+    field_option: "{{ ref('field_option') }}"
+    issue_field_history: "{{ ref('issue_field_history') }}"
+    issue_link: "{{ ref('issue_link') }}"
+    issue_multiselect_history: "{{ ref('issue_multiselect_history') }}"
+    issue_type: "{{ ref('issue_type') }}"
+    issue: "{{ ref('issue') }}"
+    priority: "{{ ref('priority') }}"
+    project_board: "{{ ref('project_board') }}"
+    project_category: "{{ ref('project_category') }}"
+    project: "{{ ref('project') }}"
+    resolution: "{{ ref('resolution') }}"
+    sprint: "{{ ref('sprint') }}"
+    status_category: "{{ ref('status_category') }}"
+    status: "{{ ref('status') }}"
+    user_group: "{{ ref('user_group') }}"
+    user: "{{ ref('user') }}"
+    version: "{{ ref('version') }}"
+
+    jira_schema: jira_source_integration_tests
+
+seeds:
+  jira_source_integration_tests:
+    +column_types:
+      _fivetran_synced: timestamp
+    board:
+      +column_types:
+        id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+    comment:
+      +column_types:
+        id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+        created: timestamp
+        issue_id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+        updated: timestamp
+    component:
+      +column_types:
+        id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+        project_id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+    epic: 
+      +column_types:
+        id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+    field_option:
+      +column_types:
+        id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+    issue:
+      +column_types:
+        id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+        created: timestamp
+        work_ratio: float
+        resolved: timestamp
+        assignee: "{{ 'string' if target.name in ('bigquery', 'spark') else 'varchar' }}"
+    issue_multiselect_history:
+      +column_types:
+        time: timestamp
+        issue_id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+        value: "{{ 'string' if target.name in ('bigquery', 'spark') else 'varchar' }}"
+    issue_field_history:
+      +column_types:
+        time: timestamp
+        issue_id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+        value: "{{ 'string' if target.name in ('bigquery', 'spark') else 'varchar' }}"
+    sprint: 
+      +column_types:
+        id: "{{ 'int64' if target.name == 'bigquery' else 'bigint' }}"
+        complete_date: timestamp
+        end_date: timestamp
+        start_date: timestamp
+    field: 
+      +column_types:
+        id: "{{ 'string' if target.name in ('bigquery', 'spark') else 'varchar' }}"
