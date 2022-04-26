@@ -31,7 +31,18 @@ with custom_fields as (
         liquidation_date.value as liquidation_date,
         last_payroll_date.value as last_payroll_date,
         affected_plans_and_participants.value as affected_plans_and_participants,
-        rk_ops_team.value as rk_ops_team
+        rk_ops_team.value as rk_ops_team,
+        payroll_provider.value as payroll_provider,
+        integration_type.value as integration_type,
+        type.value as type,
+        sub_type.value as sub_type,
+        division.value as division,
+        external_id.value as external_id,
+        ucid.value as ucid,
+        payroll_status.value as payroll_status,
+        event_id.value as event_id,
+        sponsor_id.value as sponsor_id,
+        participant_id.value as participant_id
 
     from {{ ref('stg_jira__issue_field_history_tmp') }} issue_field_history
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10744') product on product.issue_id = issue_field_history.issue_id
@@ -64,7 +75,18 @@ with custom_fields as (
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10726') last_payroll_date on last_payroll_date.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10735') affected_plans_and_participants on affected_plans_and_participants.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10742') rk_ops_team on rk_ops_team.issue_id = issue_field_history.issue_id
-)
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10619') payroll_provider on payroll_provider.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10620') integration_type on integration_type.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10624') type on type.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10674') sub_type on sub_type.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10675') division on division.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10676') external_id on external_id.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10677') ucid on ucid.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10678') payroll_status on payroll_status.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10679') event_id on event_id.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10702') sponsor_id on sponsor_id.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10703') participant_id on participant_id.issue_id = issue_field_history.issue_id
+    )
 
 select
     issue.key,
