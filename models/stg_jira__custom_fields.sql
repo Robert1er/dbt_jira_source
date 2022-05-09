@@ -23,7 +23,7 @@ with custom_fields as (
         alert_type.value as alert_type,
         expected_date.value as expected_date,
         first_payroll_date.value as first_payroll_date,
-        record_keeper.value as record_keeper,
+        coalesce(record_keeper.value, record_keeper2.value, record_keeper3.value, record_keeper4.value, record_keeper5.value) as record_keeper,
         ops_task_type.value as ops_task_type,
         participant_transaction_type.value as participant_transaction_type,
         investment_sub_type.value as investment_sub_type,
@@ -43,7 +43,7 @@ with custom_fields as (
         event_id.value as event_id,
         sponsor_id.value as sponsor_id,
         participant_id.value as participant_id
-        --advisor, label
+        advisor.value as advisor
 
     from {{ ref('stg_jira__issue_field_history_tmp') }} issue_field_history
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10744') product on product.issue_id = issue_field_history.issue_id
@@ -69,12 +69,19 @@ with custom_fields as (
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10684') plan_id4 on plan_id4.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10691') plan_id5 on plan_id5.issue_id = issue_field_history.issue_id
 
+    --need to bring in all plan_id fields till we sort out the duplicate issue
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10697') record_keeper on record_keeper.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10637') record_keeper2 on record_keeper.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10672') record_keeper3 on record_keeper.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10681') record_keeper4 on record_keeper.issue_id = issue_field_history.issue_id
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10701') record_keeper5 on record_keeper.issue_id = issue_field_history.issue_id
+
+    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10546') advisor on advisor.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10648') requesting_team on requesting_team.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10665') payroll_system on payroll_system.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10671') alert_type on alert_type.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10690') expected_date on expected_date.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10692') first_payroll_date on first_payroll_date.issue_id = issue_field_history.issue_id
-    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10697') record_keeper on record_keeper.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10698') ops_task_type on ops_task_type.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10712') participant_transaction_type on participant_transaction_type.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10713') investment_sub_type on investment_sub_type.issue_id = issue_field_history.issue_id

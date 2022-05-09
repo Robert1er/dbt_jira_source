@@ -1,7 +1,7 @@
 
 with base as (
 
-    select * 
+    select *
     from {{ ref('stg_jira__issue_multiselect_history_tmp') }}
 
 ),
@@ -15,13 +15,13 @@ fields as (
                 staging_columns=get_issue_multiselect_history_columns()
             )
         }}
-        
+
     from base
 ),
 
 final as (
-    
-    select 
+
+    select
         _fivetran_id,
         cast(field_id as {{ dbt_utils.type_string() }}) as field_id,
         issue_id,
@@ -33,8 +33,9 @@ final as (
         time
         {% endif %} as updated_at,
         value as field_value,
+        is_active,
         _fivetran_synced
-        
+
     from fields
 )
 
