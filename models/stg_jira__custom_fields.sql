@@ -69,12 +69,12 @@ with custom_fields as (
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10684') plan_id4 on plan_id4.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10691') plan_id5 on plan_id5.issue_id = issue_field_history.issue_id
 
-    --need to bring in all plan_id fields till we sort out the duplicate issue
-    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10697') record_keeper on record_keeper.issue_id = issue_field_history.issue_id
-    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10637') record_keeper2 on record_keeper2.issue_id = issue_field_history.issue_id
+    --need to bring in all recordkeeper fields till we sort out the duplicate issue
+    left join (select ifh.issue_id, fo.name as value from {{ ref('stg_jira__issue_field_history_tmp') }} ifh join {{ ref ('stg_jira__field_option_tmp') }} fo on ifh.value = fo.id::string where ifh.is_active = True and ifh.field_id = 'customfield_10697') record_keeper on record_keeper.issue_id = issue_field_history.issue_id
+    left join (select ifh.issue_id, fo.name as value from {{ ref('stg_jira__issue_field_history_tmp') }} ifh join {{ ref ('stg_jira__field_option_tmp') }} fo on ifh.value = fo.id::string where ifh.is_active = True and ifh.field_id = 'customfield_10637') record_keeper2 on record_keeper2.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10672') record_keeper3 on record_keeper3.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10681') record_keeper4 on record_keeper4.issue_id = issue_field_history.issue_id
-    left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10701') record_keeper5 on record_keeper5.issue_id = issue_field_history.issue_id
+    left join (select ifh.issue_id, fo.name as value from {{ ref('stg_jira__issue_field_history_tmp') }} ifh join {{ ref ('stg_jira__field_option_tmp') }} fo on ifh.value = fo.id::string where ifh.is_active = True and ifh.field_id = 'customfield_10701') record_keeper5 on record_keeper5.issue_id = issue_field_history.issue_id
 
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10546') advisor on advisor.issue_id = issue_field_history.issue_id
     left join (select issue_id, value from {{ ref('stg_jira__issue_field_history_tmp') }} where is_active = True and field_id = 'customfield_10648') requesting_team on requesting_team.issue_id = issue_field_history.issue_id
